@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vacinacao_backend", "vacinacao_backend.csproj", "{8779A3D9-4906-4B61-8682-E32A960FCF63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vacinacao_testes", "..\vacinacao_testes\vacinacao_testes.csproj", "{EA75CFA4-0F63-4F06-8D1D-6B92B3366B88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8779A3D9-4906-4B61-8682-E32A960FCF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8779A3D9-4906-4B61-8682-E32A960FCF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8779A3D9-4906-4B61-8682-E32A960FCF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8779A3D9-4906-4B61-8682-E32A960FCF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA75CFA4-0F63-4F06-8D1D-6B92B3366B88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA75CFA4-0F63-4F06-8D1D-6B92B3366B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA75CFA4-0F63-4F06-8D1D-6B92B3366B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA75CFA4-0F63-4F06-8D1D-6B92B3366B88}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D48B1876-943E-4179-8BD2-4F68D1852E76}
+	EndGlobalSection
+EndGlobal
