@@ -29,7 +29,7 @@ namespace vacinacao_backend.Services {
                 var response = new LoginResponseDTO { AccessToken = GenerateAccessToken(usuario) };
                 return response;
 			}
-			catch (Exception e) {
+			catch (Exception) {
                 throw new AuthenticationException("Email ou senha inválidos!");
 			}
         }
