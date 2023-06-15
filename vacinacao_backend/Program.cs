@@ -16,6 +16,15 @@ namespace vacinacao_backend {
 
             // Add services to the container.
 
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowAnything", builder => {
+                    builder
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+                });
+            });
+
             builder.Services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -83,7 +92,7 @@ namespace vacinacao_backend {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("AllowAnything");
             app.UseHttpsRedirection();
 
             app.MapHealthChecks("/_health", new HealthCheckOptions {
