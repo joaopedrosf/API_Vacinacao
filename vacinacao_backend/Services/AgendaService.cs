@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using vacinacao_backend.Exceptions;
+using vacinacao_backend.Hubs;
 using vacinacao_backend.Models;
+using vacinacao_backend.Models.DTOs;
 using vacinacao_backend.Models.Enums;
 using vacinacao_backend.Repositories;
 
@@ -8,9 +10,11 @@ namespace vacinacao_backend.Services {
     public class AgendaService {
 
         private readonly VacinacaoContext _vacinacaoContext;
+        private readonly VacinacaoHub _vacinacaoHub;
 
-        public AgendaService(VacinacaoContext vacinacaoContext) {
+        public AgendaService(VacinacaoContext vacinacaoContext, VacinacaoHub vacinacaoHub) {
             _vacinacaoContext = vacinacaoContext;
+            _vacinacaoHub = vacinacaoHub;
         }
 
         public async Task<List<Agenda>> FindAllAgendamentos() {
@@ -35,7 +39,7 @@ namespace vacinacao_backend.Services {
                 throw new UsuarioMenorDeIdadeException("Usuário menor de idade não pode fazer agendamentos!");
             }
 
-            var vacina = await _vacinacaoContext.Vacinas.FindAsync(agendamento.VacinaId);
+            var vacina = await _vacinacaoContext.Vacinas.AsNoTracking().FirstOrDefaultAsync(v => v.Id == agendamento.VacinaId);
 
             if(vacina == null) {
                 throw new VacinaNaoEncontradaException("Vacina não encontrada!");
@@ -58,7 +62,9 @@ namespace vacinacao_backend.Services {
 
             int dosesRestantes = vacina.Doses - dosesRealizadas;
 
+            var listaAgendamentosRestantes = new List<Agenda>(dosesRestantes);
             await _vacinacaoContext.Agendamentos.AddAsync(agendamento);
+            listaAgendamentosRestantes.Add(agendamento);
             for (int i = 1; i < dosesRestantes; i++) {
                 var proximaData = agendamento.Data;
                 int novoIntervalo = vacina.Intervalo!.Value * i;
@@ -79,8 +85,10 @@ namespace vacinacao_backend.Services {
                 var novaAgenda = new Agenda(agendamento);
                 novaAgenda.Data = proximaData;
                 await _vacinacaoContext.Agendamentos.AddAsync(novaAgenda);
+                listaAgendamentosRestantes.Add(novaAgenda);
             }
             await _vacinacaoContext.SaveChangesAsync();
+            await _vacinacaoHub.SendNovosAgendamentos(listaAgendamentosRestantes.ConvertAll(a => new AgendaDTO(a, usuario, vacina)));
             _vacinacaoContext.Agendamentos.Entry(agendamento).State = EntityState.Detached;
         }
 

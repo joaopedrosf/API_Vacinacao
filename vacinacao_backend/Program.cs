@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using vacinacao_backend.Hubs;
 using vacinacao_backend.Repositories;
 using vacinacao_backend.Services;
 
@@ -47,6 +48,7 @@ namespace vacinacao_backend {
                 });
             });
 
+            builder.Services.AddSignalR();
             builder.Services.AddHealthChecks().AddNpgSql(builder.Configuration.GetConnectionString("postgre"));
             builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -83,6 +85,7 @@ namespace vacinacao_backend {
             builder.Services.AddScoped<VacinaService>();
             builder.Services.AddScoped<AgendaService>();
             builder.Services.AddScoped<LoginService>();
+            builder.Services.AddSingleton<VacinacaoHub>();
             builder.Services.AddEntityFrameworkNpgsql().AddDbContext<VacinacaoContext>(options => { options.UseNpgsql(builder.Configuration.GetConnectionString("postgre")); });
 
             var app = builder.Build();
@@ -102,6 +105,7 @@ namespace vacinacao_backend {
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHub<VacinacaoHub>("/hub");
             app.MapControllers();
 
             app.Run();
