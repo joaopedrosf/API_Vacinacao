@@ -92,5 +92,18 @@ namespace vacinacao_backend.Controllers {
                 return StatusCode(500, e.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("usuario")]
+        public async Task<ActionResult<List<Agenda>>> GetAgendamentosByUsuario(
+            [FromQuery(Name = "usuarioId")][Required(ErrorMessage = "O queryparam usuarioId é obrigatório")] int usuarioId) {
+            try {
+                var agendamentos = await _agendaService.FindAgendamentosByUsuario(usuarioId);
+                return Ok(agendamentos);
+            }
+            catch (Exception e) {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }
