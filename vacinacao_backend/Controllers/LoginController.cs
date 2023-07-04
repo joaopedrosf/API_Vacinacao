@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using vacinacao_backend.Models.DTOs;
 using vacinacao_backend.Services;
@@ -26,6 +27,12 @@ namespace vacinacao_backend.Controllers {
             catch (Exception e) {
                 return StatusCode(500, e.Message);
             }
+        }
+
+        [HttpGet("token/validate")]
+        [Authorize]
+        public ActionResult ValidateToken() {
+            return Ok();
         }
     }
 }
