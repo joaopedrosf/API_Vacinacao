@@ -16,6 +16,10 @@ namespace vacinacao_backend.Models
         public string UF { get; set; }
         public bool IsAdmin { get; set; }
         public string Email { get; set; }
+        public string? TokenVerificacaoConta { get; set; }
+        public DateTime? VerificadoEm { get; set; }
+        public bool IsVerificado { get; set; }
+        public string TokenRecuperacaoSenha { get; set; }
         [JsonIgnore]
         public string Senha { get; set; }
         public List<Agenda>? Agendamentos { get; set; }

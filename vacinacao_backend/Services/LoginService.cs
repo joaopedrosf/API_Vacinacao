@@ -13,11 +13,11 @@ namespace vacinacao_backend.Services {
     public class LoginService {
 
         private readonly VacinacaoContext _vacinacaoContext;
-        private readonly string jwtKey;
+        private readonly TokenService _tokenService;
 
-        public LoginService(VacinacaoContext vacinacaoContext, IConfiguration configuration) {
+        public LoginService(VacinacaoContext vacinacaoContext, TokenService tokenService) {
             _vacinacaoContext = vacinacaoContext;
-            jwtKey = configuration["JwtSettings:Key"]!;
+            _tokenService = tokenService;
         }
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO request) {
@@ -26,35 +26,12 @@ namespace vacinacao_backend.Services {
                 if(!BCrypt.Net.BCrypt.EnhancedVerify(request.Senha, usuario.Senha)) {
                     throw new AuthenticationException();
                 }
-                var response = new LoginResponseDTO { AccessToken = GenerateAccessToken(usuario), UsuarioId = usuario.Id };
+                var response = new LoginResponseDTO { AccessToken = _tokenService.GenerateAccessToken(usuario), UsuarioId = usuario.Id };
                 return response;
 			}
 			catch (Exception) {
                 throw new AuthenticationException("Email ou senha inválidos!");
 			}
-        }
-
-        private string GenerateAccessToken(Usuario usuario) {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(jwtKey);
-
-            var claims = new List<Claim> {
-                new("isAdmin", usuario.IsAdmin.ToString().ToLower()),
-                new(JwtRegisteredClaimNames.Email, usuario.Email)
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor {
-                Subject = new ClaimsIdentity(claims),
-                Issuer = "id.teste.com",
-                Audience = "vacinacao.teste.com",
-                Expires = DateTime.UtcNow.AddHours(4),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var jwt = tokenHandler.WriteToken(token);
-            return jwt;
         }
     }
 }
