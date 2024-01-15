@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore vacinacao_backend.csproj
+      run: dotnet restore /home/runner/work/API_Vacinacao/API_Vacinacao/vacinacao_backend.csproj
     - name: Build
       run: dotnet build --no-restore
     - name: Test
