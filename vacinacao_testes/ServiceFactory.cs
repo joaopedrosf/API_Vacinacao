@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using vacinacao_backend.Hubs;
 using vacinacao_backend.Repositories;
 using vacinacao_backend.Services;
 
@@ -27,9 +28,9 @@ namespace vacinacao_testes {
 
         public static AgendaService CreateAgendaService(VacinacaoContext context = null) {
             if(context == null) {
-                return new AgendaService(CreateContext());
+                return new AgendaService(CreateContext(), new VacinacaoHub());
             }
-            return new AgendaService(context);
+            return new AgendaService(context, new VacinacaoHub());
         }
 
         public static VacinaService CreateVacinaService(VacinacaoContext context = null) {
