@@ -16,6 +16,9 @@ namespace vacinacao_backend.Services {
         }
 
         public async Task InsertAlergia(Alergia alergia) {
+            if (await _vacinacaoContext.Alergias.AnyAsync(a => a.VacinaId == alergia.VacinaId)) {
+                throw new Exception("Já existe uma alergia cadastrada para essa vacina");
+            }
             await _vacinacaoContext.Alergias.AddAsync(alergia);
             await _vacinacaoContext.SaveChangesAsync();
             _vacinacaoContext.Entry(alergia).State = EntityState.Detached;
